@@ -1,0 +1,35 @@
+name: Java Unit Tests Workflow
+
+# Trigger the workflow on pull requests to main or master branches
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  test:
+    # Use a Windows runner
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Checkout the code from the main branch
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java JDK
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # OpenJDK distribution
+          java-version: '17'      # Adjust to your project's Java version
+
+      # Step 3: Compile the Java files
+      - name: Compile Java files
+        run: |
+          javac -d out LoginApp.java LoginAppTest.java # Compile both Java files
+
+      # Step 4: Run the unit tests
+      - name: Run Unit Tests
+        run: |
+          java -cp out org.junit.runner.JUnitCore LoginAppTest # Run the unit tests in LoginAppTest.java
